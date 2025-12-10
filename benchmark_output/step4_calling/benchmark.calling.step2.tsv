@@ -1,0 +1,35 @@
+##fileDate=10/12/2025
+##INFO=DP,Description="Depth of coverage">
+##INFO=NC,Description="Number of different cells">
+##INFO=CC,Description="Cell counts [A:C:T:G:I:D:N:O], where D means deletion, I insertion and O other type of character">
+##INFO=BC,Description="Base counts [A:C:T:G:I:D:N:O], where D means deletion, I insertion and O other type of character">
+##INFO=BQ,Description="Base quality sums [A:C:T:G:I:D:N:O], where D means deletion, I insertion and O other type of character">
+##INFO=BCf,Description="Base counts in forward reads [A:C:T:G:I:D:N:O], where D means deletion, I insertion and O other type of character">
+##INFO=BCr,Description="Base counts in reverse reads [A:C:T:G:I:D:N:O], where D means deletion, I insertion and O other type of character">
+##INFO=ALT,Description=Alternative alleles found
+##INFO=FILTER,Description=Filter status of the variant site
+##INFO=Cell_types,Description=Cell type/s with the variant
+##INFO=Up_context,Description=Up-stream bases in reference (4 bases)
+##INFO=Down_context,Description=Down-stream bases in reference (4 bases)
+##INFO=N_ALT,Description=Cell type/s with the variant
+##INFO=Dp,Description=Depth of coverage (reads) in the cell type supporting the variant
+##INFO=Nc,Description=Number of distinct cells found in the cell type with the mutation
+##INFO=Bc,Description=Number of reads (base count) supporting the variants in the cell type with the mutation
+##INFO=Cc,Description=Number of distinct cells supporting the variant in the cell type with the mutation
+##INFO=VAF,Description=Variant allele frequency of variant in the cell type with the mutation
+##INFO=CCF,Description=Cancer cell fraction (fraction of ditinct cells) supporting the alternative allele in the cell type with the mutation
+##INFO=BCp,Description=Beta-binomial p-value for the variant allele (considering read counts)
+##INFO=CCp,Description=Beta-binomial p-value for the variant allele (considering cell counts)
+##INFO=Cell_types_min_BC,Description=Number of cell types with a minimum number of reads covering a site
+##INFO=Cell_types_min_CC,Description=Number of cell types with a minimum number of distinct cells found in a specific site
+##INFO=Rest_BC,Description=Base counts (reads) supporting other alternative alleles in this site. BC;DP;P-value (betabin)
+##INFO=Rest_CC,Description=Cell counts supporting other alternative alleles in this site. CC;NC;P-value (betabin)
+##INFO=Fisher_p,Description=Strand bias test. Fisher exact test p-value between forward and reverse reads in variant and reference allele
+##INFO=Cell_type_Filter,Description=Filter status of the variant site in each cell type
+#CHROM	Start	End	REF	ALT	FILTER	Cell_types	Up_context	Down_context	N_ALT	Dp	Nc	Bc	Cc	VAF	CCF	BCp	CCp	Cell_types_min_BC	Cell_types_min_CC	Rest_BC	Rest_CC	Fisher_p	Cell_type_Filter	INFO	Epithelial_cells	Myeloids	Stromal_cells
+chr10	29559501	29559501	A	T	PASS	Epithelial_cells	ATTCA	TTGAT	1	18	5	6	2	0.3333	0.4	0.0	0.0001	2	2	0;48;1	0;16;1	.	PASS	DP|NC|CC|BC|BQ|BCf|BCr	18|5|3:0:2:0:0:0|12:0:6:0:0:0|419:0:208:0:0:0|0:0:0:0:0:0|12:0:6:0:0:0	NA	36|13|13:0:0:0:0:0|36:0:0:0:0:0|1331:0:0:0:0:0|0:0:0:0:0:0|36:0:0:0:0:0
+chr10	73413109	73413109	G	A	PASS	Epithelial_cells	TGGAG	CATGG	1	18	11	7	5	0.3889	0.4545	0.0	0.0	2	2	0;24;1	0;15;1	.	PASS	DP|NC|CC|BC|BQ|BCf|BCr	18|11|5:0:0:6:0:0|7:0:0:11:0:0|241:0:0:378:0:0|0:0:0:0:0:0|7:0:0:11:0:0	NA	13|9|0:0:0:9:0:0|0:0:0:13:0:0|0:0:0:456:0:0|0:0:0:0:0:0|0:0:0:13:0:0
+chr10	89413978	89413978	G	A	PASS	Epithelial_cells	GTATG	GTGTT	1	29	16	9	6	0.3103	0.375	0.0	0.0	2	2	0;32;1	0;15;1	.	PASS	DP|NC|CC|BC|BQ|BCf|BCr	29|16|6:0:0:10:0:0|9:0:0:20:0:0|314:0:0:663:0:0|0:0:0:0:0:0|9:0:0:20:0:0	NA	12|5|0:0:0:5:0:0|0:0:0:12:0:0|0:0:0:405:0:0|0:0:0:0:0:0|0:0:0:12:0:0
+chr10	97332670	97332670	G	A	PASS	Epithelial_cells	TTGGG	GTGGC	1	21	20	12	12	0.5714	0.6	0.0	0.0	3	3	0;21;1	0;19;1	.	PASS	DP|NC|CC|BC|BQ|BCf|BCr	21|20|12:0:0:8:0:0|12:0:0:9:0:0|391:0:0:296:0:0|0:0:0:0:0:0|12:0:0:9:0:0	6|6|0:0:0:6:0:0|0:0:0:6:0:0|0:0:0:237:0:0|0:0:0:0:0:0|0:0:0:6:0:0	6|5|0:0:0:5:0:0|0:0:0:6:0:0|0:0:0:200:0:0|0:0:0:0:0:0|0:0:0:6:0:0
+chr10	126926205	126926205	G	A	PASS	Epithelial_cells	GATCC	GTGAC	1	45	21	18	7	0.4	0.3333	0.0	0.0	2	2	0;49;1	0;22;1	.	PASS	DP|NC|CC|BC|BQ|BCf|BCr	45|21|7:0:0:15:0:0|18:0:0:27:0:0|712:0:0:1022:0:0|18:0:0:27:0:0|0:0:0:0:0:0	NA	22|8|0:0:0:8:0:0|0:0:0:22:0:0|0:0:0:851:0:0|0:0:0:22:0:0|0:0:0:0:0:0
+chr10	126926267	126926267	T	.	Noisy_site,PoN	.	TTTTT	AAATA	.	.	.	.	.	.	.	.	.	2	2	2;25;0.0027	2;15;0.0007	.	.	DP|NC|CC|BC|BQ|BCf|BCr	14|10|1:0:9:0:0:0|1:0:13:0:0:0|32:0:498:0:0:0|1:0:13:0:0:0|0:0:0:0:0:0	NA	11|5|0:0:4:0:1:0|0:0:10:0:1:0|0:0:369:0:41:0|0:0:10:0:1:0|0:0:0:0:0:0

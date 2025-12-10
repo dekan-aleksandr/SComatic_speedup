@@ -1,0 +1,64 @@
+======================================================================
+SCOMATIC BENCHMARK RESULTS
+======================================================================
+
+Timestamp: 2025-12-10T11:55:16.240720
+BAM file: /home/alexd/SComatic_speedup/example_data/Example.scrnaseq.bam
+Metadata: /home/alexd/SComatic_speedup/example_data/Example.cell_barcode_annotations.tsv
+Reference: /home/alexd/SComatic_speedup/example_data/chr10.fa
+Chromosome: chr10
+Processes: 1
+Output dir: /home/alexd/SComatic_speedup/benchmark_output
+
+======================================================================
+STEP TIMINGS
+======================================================================
+
+Step                                          Time (s)     Status    
+-------------------------------------------------------------------
+Step 1: Split BAM                             0.30         PASS      
+Step 2: Base Cell Counter                     11.57        PASS      
+Step 3: Merge Counts                          0.03         PASS      
+Step 4.1: Variant Calling (Beta-binomial)     0.75         PASS      
+Step 4.2: Additional Filtering                20.94        PASS      
+-------------------------------------------------------------------
+TOTAL                                         33.59        5/5 passed
+
+======================================================================
+DETAILED RESULTS
+======================================================================
+
+[Step 1: Split BAM]
+  Duration: 0.2981 seconds
+  Status: SUCCESS
+  Output files (4):
+    - benchmark.Myeloids.bam
+    - benchmark.T_cells.bam
+    - benchmark.Stromal_cells.bam
+    - benchmark.Epithelial_cells.bam
+
+[Step 2: Base Cell Counter]
+  Duration: 11.5701 seconds
+  Status: SUCCESS
+  Output files (3):
+    - benchmark.Epithelial_cells.tsv
+    - benchmark.Myeloids.tsv
+    - benchmark.Stromal_cells.tsv
+
+[Step 3: Merge Counts]
+  Duration: 0.0292 seconds
+  Status: SUCCESS
+  Output files (1):
+    - benchmark.BaseCellCounts.AllCellTypes.tsv
+
+[Step 4.1: Variant Calling (Beta-binomial)]
+  Duration: 0.7505 seconds
+  Status: SUCCESS
+  Output files (1):
+    - benchmark.calling.step1.tsv
+
+[Step 4.2: Additional Filtering]
+  Duration: 20.9425 seconds
+  Status: SUCCESS
+  Output files (1):
+    - benchmark.calling.step2.tsv

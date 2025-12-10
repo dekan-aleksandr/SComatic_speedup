@@ -1,0 +1,2 @@
+Total_reads	Pass_reads	CB_not_found	CB_not_matched	MAPQ	Total_time
+1158	491	10	641	16	0.02

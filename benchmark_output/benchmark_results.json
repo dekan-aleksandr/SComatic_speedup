@@ -1,0 +1,66 @@
+{
+  "timestamp": "2025-12-10T11:55:16.240720",
+  "config": {
+    "bam_file": "/home/alexd/SComatic_speedup/example_data/Example.scrnaseq.bam",
+    "meta_file": "/home/alexd/SComatic_speedup/example_data/Example.cell_barcode_annotations.tsv",
+    "ref_file": "/home/alexd/SComatic_speedup/example_data/chr10.fa",
+    "chrom": "chr10",
+    "nprocs": 1,
+    "output_dir": "/home/alexd/SComatic_speedup/benchmark_output"
+  },
+  "total_time_seconds": 33.59048337955028,
+  "steps_passed": 5,
+  "steps_total": 5,
+  "results": [
+    {
+      "step_name": "Step 1: Split BAM",
+      "duration_seconds": 0.29810678120702505,
+      "success": true,
+      "output_files": [
+        "/home/alexd/SComatic_speedup/benchmark_output/step1_split_bam/benchmark.Myeloids.bam",
+        "/home/alexd/SComatic_speedup/benchmark_output/step1_split_bam/benchmark.T_cells.bam",
+        "/home/alexd/SComatic_speedup/benchmark_output/step1_split_bam/benchmark.Stromal_cells.bam",
+        "/home/alexd/SComatic_speedup/benchmark_output/step1_split_bam/benchmark.Epithelial_cells.bam"
+      ],
+      "error_message": ""
+    },
+    {
+      "step_name": "Step 2: Base Cell Counter",
+      "duration_seconds": 11.570093477144837,
+      "success": true,
+      "output_files": [
+        "/home/alexd/SComatic_speedup/benchmark_output/step2_base_counts/benchmark.Epithelial_cells.tsv",
+        "/home/alexd/SComatic_speedup/benchmark_output/step2_base_counts/benchmark.Myeloids.tsv",
+        "/home/alexd/SComatic_speedup/benchmark_output/step2_base_counts/benchmark.Stromal_cells.tsv"
+      ],
+      "error_message": ""
+    },
+    {
+      "step_name": "Step 3: Merge Counts",
+      "duration_seconds": 0.029203802347183228,
+      "success": true,
+      "output_files": [
+        "/home/alexd/SComatic_speedup/benchmark_output/step3_merged/benchmark.BaseCellCounts.AllCellTypes.tsv"
+      ],
+      "error_message": ""
+    },
+    {
+      "step_name": "Step 4.1: Variant Calling (Beta-binomial)",
+      "duration_seconds": 0.7505436269566417,
+      "success": true,
+      "output_files": [
+        "/home/alexd/SComatic_speedup/benchmark_output/step4_calling/benchmark.calling.step1.tsv"
+      ],
+      "error_message": ""
+    },
+    {
+      "step_name": "Step 4.2: Additional Filtering",
+      "duration_seconds": 20.94253569189459,
+      "success": true,
+      "output_files": [
+        "/home/alexd/SComatic_speedup/benchmark_output/step4_calling/benchmark.calling.step2.tsv"
+      ],
+      "error_message": ""
+    }
+  ]
+}
