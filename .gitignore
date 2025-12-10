@@ -1,0 +1,22 @@
+# Virtual environment
+.venv/
+
+# Benchmark outputs
+benchmark_output/
+benchmark_optimized/
+benchmark_compare/
+
+# Large uncompressed files
+PoNs/*.tsv
+RNAediting/*.txt
+example_data/chr10.fa
+example_data/chr10.fa.fai
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Temp files
+/tmp/
+*.temp
