@@ -1,3 +1,7 @@
+# This is a fork of SComatic with GPU acceleration
+
+Processing time is scaling linearly, with a 25x-50x speedup.
+
 # SComatic
 SComatic is a tool that provides functionalities to detect somatic single-nucleotide mutations in high-throughput single-cell genomics and transcriptomics data sets, such as single-cell RNA-seq and single-cell ATAC-seq.
 
