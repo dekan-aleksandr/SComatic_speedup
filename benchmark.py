@@ -42,9 +42,12 @@ class SCoMaticBenchmark:
         sample_id: str = "benchmark",
         chrom: str = "chr10",
         nprocs: int = 1,
+        use_optimized: bool = False,
     ):
         self.base_dir = base_dir
         self.scripts_dir = base_dir / "scripts"
+        self.scripts_optimized_dir = base_dir / "scripts_optimized"
+        self.use_optimized = use_optimized
         self.bam_file = bam_file
         self.meta_file = meta_file
         self.ref_file = ref_file
@@ -104,8 +107,12 @@ class SCoMaticBenchmark:
         return result
 
     def step2_base_cell_counter(self) -> BenchmarkResult:
+        step_name = "Step 2: Base Cell Counter"
+        if self.use_optimized:
+            step_name += " [OPTIMIZED]"
+        
         print("\n" + "=" * 60)
-        print("STEP 2: Collect base count information")
+        print(f"STEP 2: Collect base count information {'[OPTIMIZED]' if self.use_optimized else ''}")
         print("=" * 60)
 
         self.step2_dir.mkdir(parents=True, exist_ok=True)
@@ -116,7 +123,7 @@ class SCoMaticBenchmark:
 
         if not cell_type_bams:
             result = BenchmarkResult(
-                step_name="Step 2: Base Cell Counter",
+                step_name=step_name,
                 duration_seconds=0,
                 success=False,
                 output_files=[],
@@ -126,7 +133,11 @@ class SCoMaticBenchmark:
             self._print_result(result)
             return result
 
-        script = self.scripts_dir / "BaseCellCounter" / "BaseCellCounter.py"
+        if self.use_optimized:
+            script = self.scripts_optimized_dir / "BaseCellCounter.py"
+        else:
+            script = self.scripts_dir / "BaseCellCounter" / "BaseCellCounter.py"
+        
         total_duration = 0.0
         all_success = True
         all_errors = []
@@ -152,7 +163,7 @@ class SCoMaticBenchmark:
 
         output_files = list(self.step2_dir.glob("*.tsv"))
         result = BenchmarkResult(
-            step_name="Step 2: Base Cell Counter",
+            step_name=step_name,
             duration_seconds=total_duration,
             success=all_success,
             output_files=[str(f) for f in output_files],
@@ -191,15 +202,23 @@ class SCoMaticBenchmark:
         return result
 
     def step4_1_calling(self) -> BenchmarkResult:
+        step_name = "Step 4.1: Variant Calling (Beta-binomial)"
+        if self.use_optimized:
+            step_name += " [OPTIMIZED]"
+        
         print("\n" + "=" * 60)
-        print("STEP 4.1: Variant calling (Beta-binomial tests)")
+        print(f"STEP 4.1: Variant calling {'[OPTIMIZED]' if self.use_optimized else ''}")
         print("=" * 60)
 
         self.step4_dir.mkdir(parents=True, exist_ok=True)
         merged_file = self.step3_dir / f"{self.sample_id}.BaseCellCounts.AllCellTypes.tsv"
         output_prefix = self.step4_dir / self.sample_id
 
-        script = self.scripts_dir / "BaseCellCalling" / "BaseCellCalling.step1.py"
+        if self.use_optimized:
+            script = self.scripts_optimized_dir / "BaseCellCalling_step1.py"
+        else:
+            script = self.scripts_dir / "BaseCellCalling" / "BaseCellCalling.step1.py"
+        
         args = [
             "--infile", str(merged_file),
             "--outfile", str(output_prefix),
@@ -210,7 +229,7 @@ class SCoMaticBenchmark:
         output_files = list(self.step4_dir.glob("*.step1.tsv"))
 
         result = BenchmarkResult(
-            step_name="Step 4.1: Variant Calling (Beta-binomial)",
+            step_name=step_name,
             duration_seconds=duration,
             success=success,
             output_files=[str(f) for f in output_files],
@@ -221,14 +240,22 @@ class SCoMaticBenchmark:
         return result
 
     def step4_2_filtering(self, editing_file: Path | None = None, pon_file: Path | None = None) -> BenchmarkResult:
+        step_name = "Step 4.2: Additional Filtering"
+        if self.use_optimized:
+            step_name += " [OPTIMIZED]"
+        
         print("\n" + "=" * 60)
-        print("STEP 4.2: Additional filtering (RNA editing, PoN)")
+        print(f"STEP 4.2: Additional filtering {'[OPTIMIZED]' if self.use_optimized else ''}")
         print("=" * 60)
 
         step1_output = self.step4_dir / f"{self.sample_id}.calling.step1.tsv"
         output_prefix = self.step4_dir / self.sample_id
 
-        script = self.scripts_dir / "BaseCellCalling" / "BaseCellCalling.step2.py"
+        if self.use_optimized:
+            script = self.scripts_optimized_dir / "BaseCellCalling_step2.py"
+        else:
+            script = self.scripts_dir / "BaseCellCalling" / "BaseCellCalling.step2.py"
+        
         args = [
             "--infile", str(step1_output),
             "--outfile", str(output_prefix),
@@ -243,7 +270,7 @@ class SCoMaticBenchmark:
         output_files = list(self.step4_dir.glob("*.step2.tsv"))
 
         result = BenchmarkResult(
-            step_name="Step 4.2: Additional Filtering",
+            step_name=step_name,
             duration_seconds=duration,
             success=success,
             output_files=[str(f) for f in output_files],
@@ -408,6 +435,8 @@ def main():
     parser.add_argument("--use_example", action="store_true", help="Use example data")
     parser.add_argument("--clean", action="store_true", help="Clean output directory before running")
     parser.add_argument("--results_file", type=Path, help="Output file for benchmark results")
+    parser.add_argument("--optimized", action="store_true", help="Use optimized implementations")
+    parser.add_argument("--compare", action="store_true", help="Run both original and optimized, compare results")
 
     args = parser.parse_args()
 
@@ -437,26 +466,79 @@ def main():
         print(f"Cleaning output directory: {output_dir}")
         shutil.rmtree(output_dir)
 
-    benchmark = SCoMaticBenchmark(
-        base_dir=base_dir,
-        bam_file=bam_file,
-        meta_file=meta_file,
-        ref_file=ref_file,
-        output_dir=output_dir,
-        sample_id=args.sample_id,
-        chrom=args.chrom,
-        nprocs=args.nprocs,
-    )
-
     results_file = args.results_file
     if results_file:
         results_file = results_file.resolve()
 
-    results = benchmark.run_full_pipeline(
-        editing_file=editing_file,
-        pon_file=pon_file,
-        results_file=results_file,
-    )
+    if args.compare:
+        print("\n" + "=" * 70)
+        print("  COMPARISON MODE: Running both original and optimized")
+        print("=" * 70)
+        
+        orig_output = output_dir / "original"
+        opt_output = output_dir / "optimized"
+        
+        print("\n>>> Running ORIGINAL implementation...")
+        benchmark_orig = SCoMaticBenchmark(
+            base_dir=base_dir, bam_file=bam_file, meta_file=meta_file,
+            ref_file=ref_file, output_dir=orig_output,
+            sample_id=args.sample_id, chrom=args.chrom,
+            nprocs=args.nprocs, use_optimized=False,
+        )
+        results_orig = benchmark_orig.run_full_pipeline(
+            editing_file=editing_file, pon_file=pon_file,
+            results_file=orig_output / "benchmark_results.txt",
+        )
+        
+        print("\n>>> Running OPTIMIZED implementation...")
+        benchmark_opt = SCoMaticBenchmark(
+            base_dir=base_dir, bam_file=bam_file, meta_file=meta_file,
+            ref_file=ref_file, output_dir=opt_output,
+            sample_id=args.sample_id, chrom=args.chrom,
+            nprocs=args.nprocs, use_optimized=True,
+        )
+        results_opt = benchmark_opt.run_full_pipeline(
+            editing_file=editing_file, pon_file=pon_file,
+            results_file=opt_output / "benchmark_results.txt",
+        )
+        
+        print("\n" + "=" * 70)
+        print("  COMPARISON SUMMARY")
+        print("=" * 70)
+        print(f"\n{'Step':<50} {'Original':>10} {'Optimized':>10} {'Speedup':>10}")
+        print("-" * 80)
+        
+        total_orig = sum(r.duration_seconds for r in results_orig)
+        total_opt = sum(r.duration_seconds for r in results_opt)
+        
+        for r_orig, r_opt in zip(results_orig, results_opt):
+            speedup = r_orig.duration_seconds / r_opt.duration_seconds if r_opt.duration_seconds > 0 else 0
+            step_name = r_orig.step_name.replace(" [OPTIMIZED]", "")
+            print(f"{step_name:<50} {r_orig.duration_seconds:>9.2f}s {r_opt.duration_seconds:>9.2f}s {speedup:>9.2f}x")
+        
+        print("-" * 80)
+        total_speedup = total_orig / total_opt if total_opt > 0 else 0
+        print(f"{'TOTAL':<50} {total_orig:>9.2f}s {total_opt:>9.2f}s {total_speedup:>9.2f}x")
+        
+        results = results_opt
+    else:
+        benchmark = SCoMaticBenchmark(
+            base_dir=base_dir,
+            bam_file=bam_file,
+            meta_file=meta_file,
+            ref_file=ref_file,
+            output_dir=output_dir,
+            sample_id=args.sample_id,
+            chrom=args.chrom,
+            nprocs=args.nprocs,
+            use_optimized=args.optimized,
+        )
+
+        results = benchmark.run_full_pipeline(
+            editing_file=editing_file,
+            pon_file=pon_file,
+            results_file=results_file,
+        )
 
     all_passed = all(r.success for r in results)
     sys.exit(0 if all_passed else 1)
